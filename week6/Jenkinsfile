@@ -13,6 +13,7 @@ podTemplate(containers: [
             echo "I am the ${env.BRANCH_NAME} branch"
             sh '''
             pwd
+	    ls -l
             chmod +x gradlew
             ./gradlew test
             '''
