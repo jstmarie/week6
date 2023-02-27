@@ -57,6 +57,7 @@ podTemplate(containers: [
             reportFiles: 'index.html',
             reportName: "JaCoCo checkstyle"
             ])  
+          }
         }
       }   
     }
