@@ -26,8 +26,6 @@ podTemplate(containers: [
               echo "I am the ${env.BRANCH_NAME} branch"
               sh '''
               pwd
-              cd
-              pwd
               ./gradelew jacocoTestCoverageVerification
               ./gradlew jacocoTestReport
               '''
@@ -45,7 +43,6 @@ podTemplate(containers: [
             try {
               sh '''
               pwd
-              cd Chapter08/sample1
               ./gradlew checkstyleMain
               '''
               } catch (Exception E) {
