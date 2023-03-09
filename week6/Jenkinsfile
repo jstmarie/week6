@@ -16,6 +16,7 @@ podTemplate(containers: [
             // executed in that container.
             container('gradle') {
                 stage('Build a gradle project') {
+                    echo "I am the ${env.BRANCH_NAME} branch"
                     // from the git plugin
                     // https://www.jenkins.io/doc/pipeline/steps/git/
                     //git 'https://github.com/dlambrig/Continuous-Delivery-with-Docker-and-Jenkins-Second-Edition.git'
@@ -28,6 +29,7 @@ podTemplate(containers: [
                 }
                 
                 stage("Code coverage") {
+                    echo "I am the ${env.BRANCH_NAME} branch"
                     if (env.BRANCH_NAME == "main") {
 
                     try {
@@ -51,6 +53,7 @@ podTemplate(containers: [
                 }
                 
                 stage("Checkstyle") {
+                    echo "I am the ${env.BRANCH_NAME} branch"
                     try {
                         sh '''
                         pwd
