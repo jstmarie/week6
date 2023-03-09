@@ -15,13 +15,9 @@ podTemplate(containers: [
             // "container" Selects a container of the agent pod so that all shell steps are
             // executed in that container.
             container('gradle') {
+                git branch: 'main', url: 'https://github.com/jstmarie/week6.git'
                 stage('Build a gradle project') {
                     echo "I am the ${env.BRANCH_NAME} branch"
-                    // from the git plugin
-                    // https://www.jenkins.io/doc/pipeline/steps/git/
-                    //git 'https://github.com/dlambrig/Continuous-Delivery-with-Docker-and-Jenkins-Second-Edition.git'
-                    //git 'https://github.com/jstmarie/Continuous-Delivery-with-Docker-and-Jenkins-Second-Edition.git'
-                    git 'https://github.com/jstmarie/week6.git'
                     sh '''
                     chmod +x gradlew
                     ./gradlew test
