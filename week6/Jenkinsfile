@@ -62,7 +62,10 @@ podTemplate(containers: [
                             ./gradlew jacocoTestReport
                             '''
                         } catch (Exception E) {
+                            sh '''
                             echo 'Failure detected'
+                            ./gradlew jacocoTestReport
+                            '''
                         }
                     
                     // from the HTML publisher plugin
