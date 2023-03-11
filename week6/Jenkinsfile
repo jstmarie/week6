@@ -17,6 +17,7 @@ podTemplate(containers: [
             git branch: 'main', credentialsId: 'df4599c6-a476-4d0a-a1b4-5d2c60400675', url: 'https://github.com/jstmarie/week6.git'
             container('gradle') {  
                 stage('Build a gradle project') {
+                    echo "Inside build stage"
                     if (env.BRANCH_NAME == "feature")
                       echo "Unit test on the ${env.BRANCH_NAME} branch"
                       sh '''
@@ -24,9 +25,11 @@ podTemplate(containers: [
                       ./gradlew test
                       '''
                     }
+                    echo "Leaving build stage"
                 }
 
                 stage("Checkstyle") {
+                    echo "Inside checkstyle stage"
                     if (env.BRANCH_NAME == "feature") {
                         echo "Checkstyle on the ${env.BRANCH_NAME} branch"
                         try {
@@ -44,9 +47,11 @@ podTemplate(containers: [
                       reportName: "JaCoCo checkstyle"
                     ])
                     }
+                    echo "Leaving checkstyle stage"
                 }
                 
                 stage("Code coverage") {
+                    echo "Inside code coverage stage"
                     if (env.BRANCH_NAME == "main") {
                         echo "Code coverage on the ${env.BRANCH_NAME} branch"
 
@@ -67,7 +72,7 @@ podTemplate(containers: [
                       reportFiles: 'index.html',
                       reportName: "JaCoCo Report"
                     ])
-                    
+                    echo "Leaving code coverage stage"
                     }
                 }
             }
