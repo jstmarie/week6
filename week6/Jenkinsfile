@@ -14,7 +14,7 @@ podTemplate(containers: [
         stage('Run pipeline against a gradle project - test MAIN') {
             // "container" Selects a container of the agent pod so that all shell steps are
             // executed in that container.
-            git branch: 'main', url: 'https://github.com/jstmarie/week6.git'
+            git branch: 'main', credentialsId: 'df4599c6-a476-4d0a-a1b4-5d2c60400675', url: 'https://github.com/jstmarie/week6.git'
             container('gradle') {  
                 stage('Build a gradle project') {
                     if (env.BRANCH_NAME == "feature")
