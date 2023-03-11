@@ -11,52 +11,27 @@ podTemplate(containers: [
     ) {
 
     node(POD_LABEL) {
-        stage('Run pipeline against a gradle project') {
+        stage('Run pipeline against a gradle project - test MAIN') {
             // "container" Selects a container of the agent pod so that all shell steps are
             // executed in that container.
-            container('gradle') {
+            git branch: 'main', url: 'https://github.com/jstmarie/week6.git'
+            container('gradle') {  
                 stage('Build a gradle project') {
-                    // from the git plugin
-                    // https://www.jenkins.io/doc/pipeline/steps/git/
-                    //git 'https://github.com/dlambrig/Continuous-Delivery-with-Docker-and-Jenkins-Second-Edition.git'
-                    //git 'https://github.com/jstmarie/Continuous-Delivery-with-Docker-and-Jenkins-Second-Edition.git'
-                    git 'https://github.com/jstmarie/week6.git'
-                    sh '''
-                    #cd Chapter08/sample1
-                    chmod +x gradlew
-                    ./gradlew test
-                    '''
+                    if (env.BRANCH_NAME == "feature")
+                      echo "Unit test on the ${env.BRANCH_NAME} branch"
+                      sh '''
+                      chmod +x gradlew
+                      ./gradlew test
+                      '''
+                    }
                 }
-                
-                stage("Code coverage") {
-                    if (env.BRANCH_NAME == "main") {
 
-                    try {
-                        sh '''
-                        pwd
-                        #cd Chapter08/sample1
-                        ./gradlew jacocoTestCoverageVerification
-                        ./gradlew jacocoTestReport
-                        '''
-                    } catch (Exception E) {
-                        echo 'Failure detected'
-                    }
-                    
-                    // from the HTML publisher plugin
-                    // https://www.jenkins.io/doc/pipeline/steps/htmlpublisher/
-                    publishHTML (target: [
-                      reportDir: 'build/reports/tests/test',
-                      reportFiles: 'index.html',
-                      reportName: "JaCoCo Report"
-                    ])
-                    }
-                }
-                
                 stage("Checkstyle") {
-                    try {
+                    if (env.BRANCH_NAME == "feature") {
+                        echo "Checkstyle on the ${env.BRANCH_NAME} branch"
+                        try {
                         sh '''
                         pwd
-                        #cd Chapter08/sample1
                         ./gradlew checkstyleMain
                         '''
                     } catch (Exception E) {
@@ -64,12 +39,36 @@ podTemplate(containers: [
                     }
                     
                     publishHTML (target: [
-                      reportDir: 'Chapter08/sample1/build/reports/tests/test',
+                      reportDir: 'build/reports/checkstyle',
                       reportFiles: 'index.html',
                       reportName: "JaCoCo checkstyle"
                     ])
+                    }
+                }
+                
+                stage("Code coverage") {
+                    if (env.BRANCH_NAME == "main") {
+                        echo "Code coverage on the ${env.BRANCH_NAME} branch"
+
+                        try {
+                            sh '''
+                            pwd
+                            ./gradlew jacocoTestCoverageVerification
+                            ./gradlew jacocoTestReport
+                            '''
+                        } catch (Exception E) {
+                            echo 'Failure detected'
+                        }
+                    
+                        // from the HTML publisher plugin
+                        // https://www.jenkins.io/doc/pipeline/steps/htmlpublisher/
+                        publishHTML (target: [
+                          reportDir: 'build/reports/jacoco/test/html',
+                          reportFiles: 'index.html',
+                          reportName: "JaCoCo Report"
+                        ])
+                    }
                 }
             }
         }
     }
-}
